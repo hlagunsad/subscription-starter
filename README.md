@@ -2,7 +2,7 @@
 
 Auth + **Stripe subscriptions** in Next.js: sign up, subscribe to a paid plan, and unlock premium content — with subscription status written **server-side only** (after Stripe confirms payment), so a user can never grant themselves "Pro."
 
-**Live demo:** _deploying to Vercel_
+**Live demo:** https://subscription-starter-zeta-khaki.vercel.app
 
 ## How it works
 1. **Sign up / log in** (Supabase Auth)
