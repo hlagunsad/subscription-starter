@@ -26,9 +26,12 @@ NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=...
 SUPABASE_SECRET_KEY=...            # server-only
 STRIPE_SECRET_KEY=sk_test_...
 STRIPE_PRICE_ID=price_...          # the recurring price, not the product id
-NEXT_PUBLIC_SITE_URL=http://localhost:3000
+STRIPE_WEBHOOK_SECRET=whsec_...    # optional locally; set in prod (see "Stripe webhook" below)
+NEXT_PUBLIC_SITE_URL=http://localhost:3000   # fallback only — redirect URLs use the request origin
 ```
 Then run `supabase/migrations/0001_init.sql` in the Supabase SQL editor (creates the `subscriptions` table + RLS), and turn off "Confirm email" in Supabase Auth so sign-up is instant.
+
+**Stripe webhook (production):** in the Stripe Dashboard → Developers → Webhooks, add an endpoint at `<your-site>/api/webhooks/stripe` for `checkout.session.completed`, `customer.subscription.updated`, and `customer.subscription.deleted`, then put its signing secret in `STRIPE_WEBHOOK_SECRET` (your host's env vars). This keeps subscription status correct on renewals / cancellations and even if the post-checkout redirect is missed. For local testing: `stripe listen --forward-to localhost:3000/api/webhooks/stripe` (prints a `whsec_…`).
 ```bash
 npm run dev       # http://localhost:3000
 npm test          # Vitest unit tests
