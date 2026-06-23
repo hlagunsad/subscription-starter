@@ -10,7 +10,9 @@ export async function POST(req: Request) {
 
     const priceId = process.env.STRIPE_PRICE_ID;
     if (!priceId) return NextResponse.json({ error: "STRIPE_PRICE_ID is not set" }, { status: 500 });
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+    // Redirect URLs follow the live request origin (prod / preview / local), not a build-time
+    // env that can be stale — e.g. NEXT_PUBLIC_SITE_URL=localhost would send paying users there.
+    const siteUrl = req.headers.get("origin") ?? process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
     const admin = getSupabaseAdmin();
     const stripe = getStripe();
